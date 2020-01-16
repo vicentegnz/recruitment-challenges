@@ -1,14 +1,11 @@
 ﻿using Refactoring.FraudDetection.Core;
 using Refactoring.FraudDetection.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Refactoring.FraudDetection.Infraestructure
 {
     public class CheckFraudulentOrderService : ICheckFraudulentOrderService
     {
-
         #region Public Methods
 
         public List<FraudResultModel> GetAllFraudulentsOrders(List<OrderModel> orders)
