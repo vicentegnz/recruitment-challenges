@@ -7,18 +7,27 @@ namespace Algorithms.CountingBits.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Algorithms.CountingBits.Core;
+    using Algorithms.CountingBits.Infraestructure;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class PositiveBitCounterTest
     {
-        private readonly PositiveBitCounter bitCounter = new PositiveBitCounter();
+
+        private static IPositiveBitCounterService _positiveBitCounterService;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _positiveBitCounterService = new PositiveBitCounterService();
+        }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Count_NegativeValue_ArgumentExceptionExpected()
         {
-            this.bitCounter.Count(-2);
+            ExecuteTest(-2);
         }
 
         [TestMethod]
@@ -26,7 +35,7 @@ namespace Algorithms.CountingBits.Tests
         {
             CollectionAssert.AreEqual(
                 expected: new List<int> { 0 },
-                actual: this.bitCounter.Count(0).ToList(),
+                actual: ExecuteTest(0),
                 message: "The result is not the expected");
         }
 
@@ -35,7 +44,7 @@ namespace Algorithms.CountingBits.Tests
         {
             CollectionAssert.AreEqual(
                 expected: new List<int> { 1, 0 },
-                actual: this.bitCounter.Count(1).ToList(),
+                actual: ExecuteTest(1),
                 message: "The result is not the expected");
         }
 
@@ -44,8 +53,15 @@ namespace Algorithms.CountingBits.Tests
         {
             CollectionAssert.AreEqual(
                 expected: new List<int> { 3, 0, 5, 7 },
-                actual: this.bitCounter.Count(161).ToList(),
+                actual: ExecuteTest(161),
                 message: "The result is not the expected");
+        }
+
+         private static List<int> ExecuteTest(int input)
+        {
+            var _bitCounter = new PositiveBitCounter(_positiveBitCounterService);
+
+            return _bitCounter.Count(input).ToList();
         }
     }
 }
