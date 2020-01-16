@@ -9,12 +9,22 @@ namespace Refactoring.FraudDetection.Infraestructure
 {
     public class OrderReader : IReader<OrderModel>
     {
-        public INormalizer<OrderModel> _orderNormalizer;
+        #region Properties
+
+        private readonly INormalizer<OrderModel> _orderNormalizer;
+
+        #endregion
+
+        #region Ctor
 
         public OrderReader(INormalizer<OrderModel> normalizer)
         {
             _orderNormalizer = normalizer;
         }
+
+        #endregion
+
+        #region Public Methods
 
         public IEnumerable<OrderModel> GetDataFromFile(string filePath)
         {
@@ -45,5 +55,8 @@ namespace Refactoring.FraudDetection.Infraestructure
 
             return orders;
         }
+
+        #endregion
+
     }
 }

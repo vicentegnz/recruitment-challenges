@@ -8,6 +8,9 @@ namespace Refactoring.FraudDetection.Infraestructure
 {
     public class CheckFraudulentOrderService : ICheckFraudulentOrderService
     {
+
+        #region Public Methods
+
         public List<FraudResultModel> GetAllFraudulentsOrders(List<OrderModel> orders)
         {
 
@@ -21,20 +24,21 @@ namespace Refactoring.FraudDetection.Infraestructure
                 for (int j = i + 1; j < orders.Count; j++)
                 {
                     OrderModel possibleFraudulentOrder = orders[j];
-                    if (IsFraudulentOrder(current, possibleFraudulentOrder))
+                    if (AreFraudulentsOrders(current, possibleFraudulentOrder))
                     {
                         fraudResults.Add(new FraudResultModel { IsFraudulent = true, OrderId = possibleFraudulentOrder.OrderId });
                     }
                 }
             }
 
-
             return fraudResults;
-
         }
 
+        #endregion  
 
-        private bool IsFraudulentOrder(OrderModel order, OrderModel possibleFraudulentOrder)
+        #region Private Methods
+
+        private bool AreFraudulentsOrders(OrderModel order, OrderModel possibleFraudulentOrder)
         {
 
             if (order.CreditCard == possibleFraudulentOrder.CreditCard || order.DealId != possibleFraudulentOrder.DealId)
@@ -56,5 +60,7 @@ namespace Refactoring.FraudDetection.Infraestructure
             return false;
 
         }
+
+        #endregion
     }
 }

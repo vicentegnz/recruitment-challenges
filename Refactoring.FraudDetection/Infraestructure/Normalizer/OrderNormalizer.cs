@@ -8,16 +8,26 @@ namespace Refactoring.FraudDetection.Infraestructure.Transformers
 {
     public class OrderNormalizer : INormalizer<OrderModel>
     {
+        #region Properties
+
         private readonly IConfiguration _config;
+
+        #endregion
+
+        #region Ctor
 
         public OrderNormalizer(IConfiguration config)
         {
             _config = config;
         }
 
+        #endregion
+
+        #region Public Methods
+        
         public OrderModel Normalize(OrderModel order)
         {
-            //Normalize email
+            //Normalize email ¿it's necessary? 
             var aux = order.Email.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
 
             var atIndex = aux[0].IndexOf("+", StringComparison.Ordinal);
@@ -34,5 +44,7 @@ namespace Refactoring.FraudDetection.Infraestructure.Transformers
 
             return order;
         }
+
+        #endregion
     }
 }
