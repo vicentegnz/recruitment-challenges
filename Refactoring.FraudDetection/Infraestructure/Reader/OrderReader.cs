@@ -26,7 +26,7 @@ namespace Refactoring.FraudDetection.Infraestructure
 
         #region Public Methods
 
-        public IEnumerable<OrderModel> GetDataFromFile(string filePath)
+        public virtual IEnumerable<OrderModel> GetDataFromFile(string filePath)
         {
             var orders = new List<OrderModel>();
             using (StreamReader sr = File.OpenText(filePath))

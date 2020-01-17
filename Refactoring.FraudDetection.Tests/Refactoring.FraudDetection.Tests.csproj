@@ -20,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Conf\Normalization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Files\FourLines_MoreThanOneFraudulent.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

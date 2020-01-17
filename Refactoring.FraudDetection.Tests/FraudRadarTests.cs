@@ -24,7 +24,12 @@ namespace Refactoring.FraudDetection.Tests
     {
         private static ICheckFraudulentOrderService _checkFraudulentOrderService;
         private static INormalizer<OrderModel> _normalizer;
-        private static IReader<OrderModel>  _orderReader;
+        private static Mock<OrderReader>  _orderReader;
+
+        private readonly string fileText1 = Path.Combine(Environment.CurrentDirectory, "Files", "OneLineFile.txt");
+        private readonly string fileText2 = Path.Combine(Environment.CurrentDirectory, "Files", "TwoLines_FraudulentSecond.txt");
+        private readonly string fileText3 = Path.Combine(Environment.CurrentDirectory, "Files", "ThreeLines_FraudulentSecond.txt");
+        private readonly string fileText4 = Path.Combine(Environment.CurrentDirectory, "Files", "FourLines_MoreThanOneFraudulent.txt");
 
         [TestInitialize]
         public void Initialize()
@@ -36,7 +41,13 @@ namespace Refactoring.FraudDetection.Tests
                 .AddJsonFile("Normalization.json");
 
             _normalizer = new OrderNormalizer(configuration.Build());
-            _orderReader = new OrderReader(_normalizer);
+            _orderReader = new Mock<OrderReader>(_normalizer);
+
+            _orderReader.Setup(x => x.GetDataFromFile(It.Is<string>(p => p == fileText1))).Returns(GetMockOrders_NoFraudExpected());
+            _orderReader.Setup(x => x.GetDataFromFile(It.Is<string>(p => p == fileText2))).Returns(GetMockOrders_SecondOrderFraudulent());
+            _orderReader.Setup(x => x.GetDataFromFile(It.Is<string>(p => p == fileText3))).Returns(GetMockOrders_SecondLineFraudulenForThreeOrders());
+            _orderReader.Setup(x => x.GetDataFromFile(It.Is<string>(p => p == fileText4))).Returns(GetMockOrders_MoreThanOneFraudulent());
+
         }
 
         [TestMethod]
@@ -44,8 +55,9 @@ namespace Refactoring.FraudDetection.Tests
         public void CheckFraud_OneLineFile_NoFraudExpected()
         {
 
-            List<OrderModel> orders = _orderReader.GetDataFromFile(Path.Combine(Environment.CurrentDirectory, "Files", "OneLineFile.txt")).ToList();
-
+            List<OrderModel> orders = _orderReader.Object.GetDataFromFile(fileText1).ToList();
+                
+                
             var result = ExecuteTest(orders);
 
             result.Should().NotBeNull("The result should not be null.");
@@ -56,7 +68,7 @@ namespace Refactoring.FraudDetection.Tests
         [DeploymentItem("./Files/TwoLines_FraudulentSecond.txt", "Files")]
         public void CheckFraud_TwoLines_SecondLineFraudulent()
         {
-            List<OrderModel> orders = _orderReader.GetDataFromFile(Path.Combine(Environment.CurrentDirectory, "Files", "TwoLines_FraudulentSecond.txt")).ToList();
+            List<OrderModel> orders = _orderReader.Object.GetDataFromFile(fileText2).ToList();
 
             var result = ExecuteTest(orders);
 
@@ -70,7 +82,7 @@ namespace Refactoring.FraudDetection.Tests
         [DeploymentItem("./Files/ThreeLines_FraudulentSecond.txt", "Files")]
         public void CheckFraud_ThreeLines_SecondLineFraudulent()
         {
-            List<OrderModel> orders = _orderReader.GetDataFromFile(Path.Combine(Environment.CurrentDirectory, "Files", "ThreeLines_FraudulentSecond.txt")).ToList();
+            List<OrderModel> orders = _orderReader.Object.GetDataFromFile(fileText3).ToList();
 
             var result = ExecuteTest(orders);
 
@@ -84,7 +96,7 @@ namespace Refactoring.FraudDetection.Tests
         [DeploymentItem("./Files/FourLines_MoreThanOneFraudulent.txt", "Files")]
         public void CheckFraud_FourLines_MoreThanOneFraudulent()
         {
-            List<OrderModel> orders = _orderReader.GetDataFromFile(Path.Combine(Environment.CurrentDirectory, "Files", "FourLines_MoreThanOneFraudulent.txt")).ToList();
+            List<OrderModel> orders = _orderReader.Object.GetDataFromFile(fileText4).ToList();
 
             var result = ExecuteTest(orders);
 
@@ -98,5 +110,42 @@ namespace Refactoring.FraudDetection.Tests
 
             return fraudRadar.Check(orders).ToList();
         }
+
+
+        private List<OrderModel> GetMockOrders_MoreThanOneFraudulent()
+        {
+            return new List<OrderModel> { 
+                new OrderModel { OrderId = 1, DealId = 1, Email = "bugs@bunny.com", State = "" , ZipCode= "123", City = "new york", CreditCard = "12345689010" },
+                new OrderModel { OrderId = 2, DealId = 1, Email = "bugs@bunny.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689011" },
+                new OrderModel { OrderId = 3, DealId = 2, Email = "roger@rabbit.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689012" },
+                new OrderModel { OrderId = 4, DealId = 2, Email = "roger@rabbit.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689014" },
+            };
+        }
+
+        private List<OrderModel> GetMockOrders_SecondOrderFraudulent()
+        {
+            return new List<OrderModel> {
+                new OrderModel { OrderId = 1, DealId = 1, Email = "bugs@bunny.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689010" },
+                new OrderModel { OrderId = 2, DealId = 1, Email = "bugs@bunny.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689011" } };
+
+        }
+
+        private List<OrderModel> GetMockOrders_NoFraudExpected()
+        {
+            return new List<OrderModel> { 
+                new OrderModel { OrderId = 1, DealId = 1, Email = "bugs@bunny.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689010" } 
+            };
+
+        }
+        private List<OrderModel> GetMockOrders_SecondLineFraudulenForThreeOrders()
+        {
+            return new List<OrderModel> { 
+                new OrderModel { OrderId = 1, DealId = 1, Email = "bugs@bunny.com", State = "" , ZipCode= "123", City = "new york", CreditCard = "12345689010" },
+                new OrderModel { OrderId = 2, DealId = 1, Email = "bugs@bunny.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689011" },
+                new OrderModel { OrderId = 3, DealId = 2, Email = "roger@rabbit.com", State = "", ZipCode = "123", City = "new york", CreditCard = "12345689012" }
+            };
+
+        }
+
     }
 }
