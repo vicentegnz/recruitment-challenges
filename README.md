@@ -19,7 +19,7 @@ evitando acoplar esto a la lectura de datos de un fichero.
 La lectura de fichero la he sacado a otro servicio, y he usado un StreamReader por rendimiendo, 
 ya que el ReadAllLines en grandes ficheros tiene un rendimiento mucho peor.
 
-En los tets unitarios he moqueado la lectura de fichero, ya que si además de testear la funcionalidad de pedidos fraudulentas realiza lecturas de ficheros,
+En los tests unitarios he moqueado la lectura de fichero, ya que si además de testear la funcionalidad de pedidos fraudulentas realiza lecturas de ficheros,
 estariamos probando dos cosas en lugar de una, lo ideal sería testear por otro lado la funcionalidad de lectura de ficheros.
 
 Dudas:
@@ -28,6 +28,6 @@ Normalizador:
 El normalizador de email, no tiene sentido.. normaliza emails válidos dejandolos inutilizables, he probado algun correo personal con signos de puntuación y lo modifica.
 
 Algoritmo:
-No he modificado el algoritmo de comprobar las ordenes fraudulentas porque realiza algunas cosas que no he conseguido entender muy bien y no he querido cambiar su comportamiento, 
-he visto que puede añadir varias veces la misma orden fraudulenta en algunas ocasiones, no creo que eso sea lo más aconsejable.
+No he modificado el algoritmo de comprobar los pedidos fraudulentos porque realiza algunas cosas que no he conseguido entender muy bien y no he querido cambiar su comportamiento, 
+he visto que puede añadir varias veces el mismo pedido fraudulento en algunas ocasiones, no creo que eso sea lo más aconsejable.
 Lo ideal una vez conocido el criterio utilizado, sería seleccionar los pedidos fraudulentos con un algoritmo de complejidad inferior al actual que es ~ O(n²)
