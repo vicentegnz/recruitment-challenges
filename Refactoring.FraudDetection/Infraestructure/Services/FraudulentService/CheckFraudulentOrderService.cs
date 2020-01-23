@@ -13,7 +13,6 @@ namespace Refactoring.FraudDetection.Infraestructure
 
             var fraudResults = new List<FraudResultModel>();
             
-            // CHECK FRAUD
             for (int i = 0; i < orders.Count; i++)
             {
                 var current = orders[i];
@@ -43,7 +42,6 @@ namespace Refactoring.FraudDetection.Infraestructure
                 return false;
             }
 
-
             if (order.Email == possibleFraudulentOrder.Email ||
                 (order.State == possibleFraudulentOrder.State
                 && order.ZipCode == possibleFraudulentOrder.ZipCode
@@ -52,7 +50,6 @@ namespace Refactoring.FraudDetection.Infraestructure
             {
                 return true;
             }
-
          
             return false;
 

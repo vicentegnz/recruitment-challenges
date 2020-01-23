@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Refactoring.FraudDetection.Core;
 using Refactoring.FraudDetection.Core.Normalizer;
-using Refactoring.FraudDetection.Core.Reader;
 using Refactoring.FraudDetection.Infraestructure;
 using Refactoring.FraudDetection.Infraestructure.Transformers;
 using Refactoring.FraudDetection.Models;
@@ -104,6 +103,9 @@ namespace Refactoring.FraudDetection.Tests
             result.Should().HaveCount(2, "The result should contains the number of lines of the file");
         }
 
+
+        #region Private Methods
+
         private static List<FraudResultModel> ExecuteTest(List<OrderModel> orders)
         {
             var fraudRadar = new FraudRadar(_checkFraudulentOrderService);
@@ -146,6 +148,8 @@ namespace Refactoring.FraudDetection.Tests
             };
 
         }
+
+        #endregion
 
     }
 }

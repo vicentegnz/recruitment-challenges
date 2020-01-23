@@ -1,51 +1,33 @@
-# Software Engineer - C#
+Este es un texto de ayuda, pero no debería hacer falta leerlo, si lo tienes que leer, es que mi código no está como debería.
 
-Here you have the challenge for the software engineer position. You can find in this branch a visual studio solution with different projects. Two different challenges, an algorithm one another one to see how you can refactor a dirty code. If you think that you can solve it using some design patters, feel free and apply them. Let's go! :sunglasses:
+Counting Bits
 
+Siguiendo el principio de SingleResponsabily, se ha creado un servicio, que devuelva los índices dónde existen coincidencias con el valor "1".
 
-# 1- Counting bits
-Given an integer, n, we want to know the following:
-1. How many 1-bits are in its binary representation?
-2. Let's say n's binary representation has k significant bits indexed from 1 to k. What are the respective positions (i.e., in ascending order) of each 1-bit?
-3. The performance is really important in this challenge.
+Para mejorar el rendimiento, he realizado una expresión regular, evitando recorrer la cadena.
 
+Como en la solución se pedía que en la primera posición de la lista aparecierá el numero de coincidencias, lo he abstraido del servicio, 
+ya que no es su responsabilidad, y lo he llevado a la función "Principal".
 
-### Example
+Como se busca una solución escalable, he realizado dos métodos de extensión para cadenas y enteros, conversión a binario, e invertir cadenas.
 
-Complete Count function in PositiveBitCounter class. It has one parameter: an integer, n. It must return an integer enumerable with the following 1 + k values:
-* The first index (0) must contain the total number of 1 bits in n's binary representation.
-* The subsequent indices must contain the respective positions of the one-indexed 1-bits in n's binary representation.
+FraudDetection
 
-### Output format
+En primer lugar, he creado un servicio que obtiene todos los pedidos fraudulentos a partir de una lista de ellas, 
+evitando acoplar esto a la lectura de datos de un fichero.
 
-Return an enumerable of integers where the first element is the total number of 1-bits in n's binary representation and the subsequent elements are the respective one-indexed locations of each 1-bit from most to least significant.
+La lectura de fichero la he sacado a otro servicio, y he usado un StreamReader por rendimiendo, 
+ya que el ReadAllLines en grandes ficheros tiene un rendimiento mucho peor.
 
-### Tips
+En los tets unitarios he moqueado la lectura de fichero, ya que si además de testear la funcionalidad de pedidos fraudulentas realiza lecturas de ficheros,
+estariamos probando dos cosas en lugar de una, lo ideal sería testear por otro lado la funcionalidad de lectura de ficheros.
 
-The integer n = 161 converts to binary.
+Dudas:
 
-1 | 0 | 1 | 0 | 0 | 0 | 0 | 1
----|---|---|---|---|---|---| ---|
+Normalizador:
+El normalizador de email, no tiene sentido.. normaliza emails válidos dejandolos inutilizables, he probado algun correo personal con signos de puntuación y lo modifica.
 
-Reverse the binary representation.
-
-1 | 0 | 0 | 0 | 0 | 1 | 0 | 1
----|---|---|---|---|---|---| ---|
-
-Count number of positive bits: 3
-
-Search the position: 0, 5, 7
-
-Return { 3, 0, 5, 7 }
-
-
-# 2- Refactoring fraud detection
-Refactor the FraudRadar class. You can make any changes you see that are needed in code or tests. See the tests for more information.
-
-### Code Requirements:
-* All the tests must pass.
-* The code should fulfil **OOP** and **SOLID** principles.
-* The code should be maintainable.
-* The code should be extensible.
-* You should apply defensive programming practices.
-* Receive the file path is not nice. Think and change the signature and make it cooler.
+Algoritmo:
+No he modificado el algoritmo de comprobar las ordenes fraudulentas porque realiza algunas cosas que no he conseguido entender muy bien y no he querido cambiar su comportamiento, 
+he visto que puede añadir varias veces la misma orden fraudulenta en algunas ocasiones, no creo que eso sea lo más aconsejable.
+Lo ideal una vez conocido el criterio utilizado, sería seleccionar los pedidos fraudulentos con un algoritmo de complejidad inferior al actual que es ~ O(n²)

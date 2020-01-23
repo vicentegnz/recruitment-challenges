@@ -27,7 +27,7 @@ namespace Refactoring.FraudDetection.Infraestructure.Transformers
         
         public OrderModel Normalize(OrderModel order)
         {
-            //Normalize email ¿it's necessary? 
+            //Normalize email. Is it necessary? 
             var aux = order.Email.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
 
             var atIndex = aux[0].IndexOf("+", StringComparison.Ordinal);
